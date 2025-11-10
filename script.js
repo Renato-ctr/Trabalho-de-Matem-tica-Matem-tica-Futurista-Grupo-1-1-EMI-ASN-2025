@@ -4,9 +4,9 @@ function createConstellationAnimation() {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   let particles = [];
-  // Cores baseadas no seu tema
-  const particleColor = "rgba(77, 158, 255, 0.5)"; // --accent-light
-  const lineColor = "rgba(77, 158, 255, 0.1)";
+  // Cores atualizadas para o tema rosa
+  const particleColor = "rgba(255, 128, 171, 0.5)"; // --accent-light
+  const lineColor = "rgba(255, 128, 171, 0.1)";
   const maxDistance = 120; // Distância para conectar
   let particleCount;
 
@@ -92,13 +92,6 @@ function createConstellationAnimation() {
   init();
   animate();
 }
-
-/*
-// ========== ANIMAÇÃO DE FUNDO ANTIGA (REMOVIDA) ==========
-function createBackgroundAnimation() {
-    // ... código antigo do DNA ...
-}
-*/
 
 // ========== CÁLCULO DE ÁREAS ==========
 // Cálculo da área do triângulo com validação melhorada
@@ -531,7 +524,7 @@ function showQuizResults(score, total) {
   } else if (percentage >= 70) {
     performanceMessage.textContent =
       "👍 Muito bom! Você tem um ótimo conhecimento sobre áreas.";
-    performanceMessage.style.color = "#4d9eff";
+    performanceMessage.style.color = "#ff80ab";
   } else if (percentage >= 50) {
     performanceMessage.textContent =
       "💡 Bom! Continue estudando para melhorar seu desempenho.";
@@ -584,8 +577,7 @@ document.querySelectorAll("nav a").forEach((anchor) => {
 // ========== INICIALIZAÇÃO ==========
 document.addEventListener("DOMContentLoaded", function () {
   // Criar animação de fundo
-  // createBackgroundAnimation(); // <-- Função antiga removida
-  createConstellationAnimation(); // <-- Nova função
+  createConstellationAnimation();
 
   // Renderizar questões do quiz
   renderQuizQuestions();
