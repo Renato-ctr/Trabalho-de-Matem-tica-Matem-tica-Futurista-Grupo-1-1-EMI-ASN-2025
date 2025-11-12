@@ -94,15 +94,53 @@ function createConstellationAnimation() {
 }
 
 // ========== CÁLCULO DE ÁREAS ==========
-// Cálculo da área do triângulo com validação melhorada
+// Cálculo da área do triângulo retângulo
 document
   .getElementById("calcular-triangulo")
   .addEventListener("click", function () {
-    const base = parseFloat(document.getElementById("base-triangulo").value);
-    const altura = parseFloat(
-      document.getElementById("altura-triangulo").value
-    );
+    const cateto1 = parseFloat(document.getElementById("cateto1").value);
+    const cateto2 = parseFloat(document.getElementById("cateto2").value);
     const resultado = document.getElementById("resultado-triangulo");
+    const button = this;
+
+    // Validação
+    if (isNaN(cateto1) || isNaN(cateto2) || cateto1 <= 0 || cateto2 <= 0) {
+      resultado.innerHTML =
+        '<p style="color: #ff6b6b;">⚠️ Por favor, insira valores válidos para os catetos (números positivos).</p>';
+      resultado.style.display = "block";
+      return;
+    }
+
+    // Feedback visual
+    button.textContent = "Calculando...";
+    button.disabled = true;
+
+    setTimeout(() => {
+      const area = (cateto1 * cateto2) / 2;
+      const hipotenusa = Math.sqrt(cateto1 * cateto1 + cateto2 * cateto2);
+      
+      resultado.innerHTML = `
+            <p>📐 Área do triângulo retângulo:</p>
+            <p><strong>A = (cateto₁ × cateto₂) / 2</strong></p>
+            <p><strong>A = (${cateto1} × ${cateto2}) / 2 = ${area.toFixed(2)}</strong> unidades quadradas</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #ff80ab;">
+                💡 Dica: A hipotenusa deste triângulo é ${hipotenusa.toFixed(2)} unidades
+            </p>
+        `;
+      resultado.style.display = "block";
+
+      button.textContent = "Calcular Área";
+      button.disabled = false;
+    }, 500);
+  });
+
+// Cálculo da área do paralelogramo
+document
+  .getElementById("calcular-paralelogramo")
+  .addEventListener("click", function () {
+    const base = parseFloat(document.getElementById("base-paralelogramo").value);
+    const altura = parseFloat(document.getElementById("altura-paralelogramo").value);
+    const resultado = document.getElementById("resultado-paralelogramo");
     const button = this;
 
     // Validação
@@ -118,65 +156,15 @@ document
     button.disabled = true;
 
     setTimeout(() => {
-      const area = (base * altura) / 2;
+      const area = base * altura;
+      
       resultado.innerHTML = `
-            <p>📐 Área do triângulo:</p>
-            <p><strong>A = (b × h) / 2</strong></p>
-            <p><strong>A = (${base} × ${altura}) / 2 = ${area.toFixed(
-        2
-      )}</strong> unidades quadradas</p>
-        `;
-      resultado.style.display = "block";
-
-      button.textContent = "Calcular Área";
-      button.disabled = false;
-    }, 500);
-  });
-
-// Cálculo da área do trapézio com validação melhorada
-document
-  .getElementById("calcular-trapezio")
-  .addEventListener("click", function () {
-    const baseMaior = parseFloat(document.getElementById("base-maior").value);
-    const baseMenor = parseFloat(document.getElementById("base-menor").value);
-    const altura = parseFloat(document.getElementById("altura-trapezio").value);
-    const resultado = document.getElementById("resultado-trapezio");
-    const button = this;
-
-    // Validação
-    if (
-      isNaN(baseMaior) ||
-      isNaN(baseMenor) ||
-      isNaN(altura) ||
-      baseMaior <= 0 ||
-      baseMenor <= 0 ||
-      altura <= 0
-    ) {
-      resultado.innerHTML =
-        '<p style="color: #ff6b6b;">⚠️ Por favor, insira valores válidos para as bases e altura (números positivos).</p>';
-      resultado.style.display = "block";
-      return;
-    }
-
-    if (baseMenor >= baseMaior) {
-      resultado.innerHTML =
-        '<p style="color: #ff6b6b;">⚠️ A base maior deve ser maior que a base menor.</p>';
-      resultado.style.display = "block";
-      return;
-    }
-
-    // Feedback visual
-    button.textContent = "Calculando...";
-    button.disabled = true;
-
-    setTimeout(() => {
-      const area = ((baseMaior + baseMenor) * altura) / 2;
-      resultado.innerHTML = `
-            <p>📊 Área do trapézio:</p>
-            <p><strong>A = [(B + b) × h] / 2</strong></p>
-            <p><strong>A = [(${baseMaior} + ${baseMenor}) × ${altura}] / 2 = ${area.toFixed(
-        2
-      )}</strong> unidades quadradas</p>
+            <p>📊 Área do paralelogramo:</p>
+            <p><strong>A = b × h</strong></p>
+            <p><strong>A = ${base} × ${altura} = ${area.toFixed(2)}</strong> unidades quadradas</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #ff80ab;">
+                💡 Lembrete: Esta área é o dobro da área de um triângulo com mesma base e altura
+            </p>
         `;
       resultado.style.display = "block";
 
@@ -189,18 +177,17 @@ document
 document
   .getElementById("limpar-triangulo")
   .addEventListener("click", function () {
-    document.getElementById("base-triangulo").value = "";
-    document.getElementById("altura-triangulo").value = "";
+    document.getElementById("cateto1").value = "";
+    document.getElementById("cateto2").value = "";
     document.getElementById("resultado-triangulo").style.display = "none";
   });
 
 document
-  .getElementById("limpar-trapezio")
+  .getElementById("limpar-paralelogramo")
   .addEventListener("click", function () {
-    document.getElementById("base-maior").value = "";
-    document.getElementById("base-menor").value = "";
-    document.getElementById("altura-trapezio").value = "";
-    document.getElementById("resultado-trapezio").style.display = "none";
+    document.getElementById("base-paralelogramo").value = "";
+    document.getElementById("altura-paralelogramo").value = "";
+    document.getElementById("resultado-paralelogramo").style.display = "none";
   });
 
 // Permitir calcular com Enter
@@ -214,128 +201,110 @@ document.querySelectorAll("input").forEach((input) => {
   });
 });
 
-// ========== QUIZ ==========
+// ========== QUIZ ATUALIZADO ==========
 const quizQuestions = [
   {
-    question: "Qual é a fórmula para calcular a área de um triângulo?",
+    question: "Qual é a fórmula para calcular a área de um triângulo retângulo?",
     options: [
       "A = b × h",
-      "A = (b × h) / 2",
+      "A = (cateto₁ × cateto₂) / 2",
       "A = π × r²",
-      "A = (B + b) × h / 2"
+      "A = (base × altura) / 3"
     ],
     correct: 1
   },
   {
-    question: "Qual é a fórmula para calcular a área de um trapézio?",
+    question: "Qual é a fórmula para calcular a área de um paralelogramo?",
     options: [
       "A = b × h",
       "A = (b × h) / 2",
-      "A = π × r²",
-      "A = (B + b) × h / 2"
+      "A = (B + b) × h / 2",
+      "A = lado × lado"
     ],
-    correct: 3
+    correct: 0
   },
   {
-    question: "Em um triângulo, a altura é:",
+    question: "Em um triângulo retângulo, os catetos são:",
+    options: [
+      "Os lados que formam o ângulo reto",
+      "Sempre os lados mais longos",
+      "O lado oposto ao ângulo reto",
+      "Sempre iguais"
+    ],
+    correct: 0
+  },
+  {
+    question: "Um triângulo retângulo com catetos 5 cm e 12 cm tem área igual a:",
+    options: ["17 cm²", "30 cm²", "60 cm²", "34 cm²"],
+    correct: 1
+  },
+  {
+    question: "Um paralelogramo com base 8 cm e altura 5 cm tem área igual a:",
+    options: ["13 cm²", "20 cm²", "40 cm²", "26 cm²"],
+    correct: 2
+  },
+  {
+    question: "Qual destas figuras sempre tem lados opostos paralelos?",
+    options: ["Triângulo", "Paralelogramo", "Círculo", "Trapézio"],
+    correct: 1
+  },
+  {
+    question: "A hipotenusa de um triângulo retângulo:",
+    options: [
+      "É sempre o menor lado",
+      "É o lado oposto ao ângulo reto",
+      "É igual à soma dos catetos",
+      "É sempre perpendicular aos catetos"
+    ],
+    correct: 1
+  },
+  {
+    question: "A altura de um paralelogramo é:",
     options: [
       "Sempre igual à base",
-      "A medida perpendicular à base",
-      "Sempre o lado mais longo",
+      "A distância perpendicular entre as bases paralelas",
+      "Sempre um de seus lados",
       "A soma de todos os lados"
     ],
     correct: 1
   },
   {
-    question: "Um triângulo com base 10 cm e altura 6 cm tem área igual a:",
-    options: ["16 cm²", "30 cm²", "60 cm²", "32 cm²"],
-    correct: 1
-  },
-  {
-    question:
-      "Um trapézio com bases 8 cm e 4 cm e altura 5 cm tem área igual a:",
-    options: ["20 cm²", "30 cm²", "40 cm²", "60 cm²"],
-    correct: 1
-  },
-  {
-    question: "Qual destas figuras sempre tem um par de lados paralelos?",
-    options: ["Triângulo", "Trapézio", "Círculo", "Pentágono"],
-    correct: 1
-  },
-  {
-    question: "A unidade de medida de área é:",
-    options: [
-      "Sempre em metros",
-      "Uma unidade de comprimento",
-      "Uma unidade de comprimento ao quadrado",
-      "Sempre em centímetros"
-    ],
-    correct: 2
-  },
-  {
-    question: "Um triângulo equilátero tem:",
+    question: "Um triângulo retângulo isósceles tem:",
     options: [
       "Três lados diferentes",
-      "Dois lados iguais",
-      "Três lados iguais",
-      "Um ângulo reto"
-    ],
-    correct: 2
-  },
-  {
-    question: "A altura de um triângulo:",
-    options: [
-      "É sempre um de seus lados",
-      "Pode estar fora do triângulo",
-      "É sempre menor que a base",
-      "É a soma de dois lados"
+      "Dois catetos iguais",
+      "Hipotenusa igual a um cateto",
+      "Todos os lados iguais"
     ],
     correct: 1
   },
   {
-    question: "Em um trapézio, as bases são:",
-    options: [
-      "Os lados não paralelos",
-      "Os lados paralelos",
-      "Sempre os lados mais longos",
-      "Sempre iguais"
-    ],
-    correct: 1
-  },
-  {
-    question: "A área de um triângulo retângulo com catetos 3 cm e 4 cm é:",
-    options: ["7 cm²", "12 cm²", "6 cm²", "5 cm²"],
-    correct: 2
-  },
-  {
-    question:
-      "Se a base de um triângulo dobra e a altura permanece a mesma, a área:",
+    question: "Se a base de um paralelogramo dobra e a altura permanece a mesma, a área:",
     options: ["Permanece a mesma", "Dobra", "Triplica", "Quadruplica"],
     correct: 1
   },
   {
-    question: "Um trapézio isósceles tem:",
+    question: "O Teorema de Pitágoras aplica-se a:",
     options: [
-      "Bases iguais",
-      "Lados não paralelos iguais",
-      "Todos os lados iguais",
-      "Ângulos da base diferentes"
+      "Todos os triângulos",
+      "Apenas triângulos retângulos",
+      "Apenas triângulos equiláteros",
+      "Todos os quadriláteros"
     ],
     correct: 1
   },
   {
-    question: "A fórmula de Heron é usada para calcular a área de:",
-    options: [
-      "Qualquer polígono",
-      "Triângulos quando se conhecem os três lados",
-      "Trapézios",
-      "Círculos"
-    ],
+    question: "Um paralelogramo com todos os ângulos retos é um:",
+    options: ["Losango", "Retângulo", "Trapézio", "Triângulo"],
     correct: 1
   },
   {
-    question:
-      "Se a altura de um triângulo é reduzida pela metade e a base permanece a mesma, a área:",
+    question: "A área de um triângulo retângulo com catetos 6 cm e 8 cm é:",
+    options: ["14 cm²", "24 cm²", "48 cm²", "28 cm²"],
+    correct: 1
+  },
+  {
+    question: "Se a altura de um paralelogramo é reduzida pela metade e a base permanece a mesma, a área:",
     options: [
       "Dobra",
       "Permanece a mesma",
@@ -345,81 +314,99 @@ const quizQuestions = [
     correct: 2
   },
   {
-    question: "Em um trapézio, a altura é:",
+    question: "Em um triângulo retângulo, a soma dos quadrados dos catetos é igual:",
     options: [
-      "A medida de um dos lados não paralelos",
-      "A distância perpendicular entre as bases",
-      "Sempre igual à base menor",
-      "A soma das bases"
+      "À área do triângulo",
+      "Ao quadrado da hipotenusa",
+      "Ao perímetro do triângulo",
+      "À soma dos catetos"
     ],
     correct: 1
   },
   {
-    question: "Um triângulo com área 24 cm² e base 8 cm tem altura igual a:",
-    options: ["3 cm", "6 cm", "12 cm", "4 cm"],
-    correct: 1
-  },
-  {
-    question: "A área de um trapézio com bases 12 cm e 8 cm e altura 5 cm é:",
-    options: ["40 cm²", "50 cm²", "60 cm²", "100 cm²"],
-    correct: 1
-  },
-  {
-    question: "Qual destes NÃO é um tipo de trapézio?",
-    options: [
-      "Trapézio isósceles",
-      "Trapézio escaleno",
-      "Trapézio retângulo",
-      "Trapézio equilátero"
-    ],
-    correct: 3
-  },
-  {
-    question: "Um triângulo com lados 5 cm, 12 cm e 13 cm é:",
-    options: ["Acutângulo", "Obtusângulo", "Equilátero", "Retângulo"],
-    correct: 3
-  },
-  {
-    question:
-      "Se as bases de um trapézio são 10 cm e 6 cm, e a área é 40 cm², a altura é:",
-    options: ["4 cm", "5 cm", "6 cm", "8 cm"],
-    correct: 1
-  },
-  {
-    question:
-      "A área de um triângulo pode ser calculada usando dois lados e o ângulo entre eles através da fórmula:",
-    options: [
-      "A = a × b × cos(θ)",
-      "A = (1/2) × a × b × sen(θ)",
-      "A = a × b × tan(θ)",
-      "A = (a + b) × sen(θ) / 2"
-    ],
-    correct: 1
-  },
-  {
-    question: "Um trapézio com bases iguais é na verdade um:",
+    question: "Um quadrado é um tipo especial de:",
     options: [
       "Triângulo",
-      "Retângulo", // Assumindo trapézio retângulo, ou paralelogramo em geral
-      "Quadrado",
-      "Losango"
+      "Paralelogramo",
+      "Círculo",
+      "Trapézio"
     ],
-    correct: 1 // Mantendo a lógica do quiz original (Retângulo/Paralelogramo)
+    correct: 1
   },
   {
-    question: "Se a área de um triângulo é 18 cm² e a altura é 6 cm, a base é:",
+    question: "A área de um paralelogramo é sempre:",
+    options: [
+      "Metade da área de um triângulo com mesma base e altura",
+      "O dobro da área de um triângulo com mesma base e altura",
+      "Igual ao seu perímetro",
+      "A soma de suas diagonais"
+    ],
+    correct: 1
+  },
+  {
+    question: "Um triângulo retângulo com catetos 9 cm e 12 cm tem hipotenusa igual a:",
+    options: ["15 cm", "21 cm", "18 cm", "25 cm"],
+    correct: 0
+  },
+  {
+    question: "Se a área de um paralelogramo é 45 cm² e a base é 9 cm, a altura é:",
+    options: ["4 cm", "5 cm", "6 cm", "7 cm"],
+    correct: 1
+  },
+  {
+    question: "Qual destes NÃO é um paralelogramo?",
+    options: [
+      "Quadrado",
+      "Retângulo",
+      "Losango",
+      "Trapézio escaleno"
+    ],
+    correct: 3
+  },
+  {
+    question: "A área de um triângulo retângulo é 18 cm² e um cateto mede 6 cm. O outro cateto mede:",
     options: ["3 cm", "6 cm", "9 cm", "12 cm"],
     correct: 1
   },
   {
-    question: "A área de um trapézio é sempre:",
+    question: "Em um paralelogramo, as diagonais:",
     options: [
-      "Maior que a área de um triângulo com a mesma altura",
-      "A média das áreas das bases",
-      "A soma das áreas de dois triângulos", // Se dividido pela diagonal
-      "O produto da altura pela base menor"
+      "São sempre iguais",
+      "Cruzam-se no ponto médio",
+      "São sempre perpendiculares",
+      "São sempre maiores que os lados"
     ],
-    correct: 2
+    correct: 1
+  },
+  {
+    question: "Um triângulo retângulo pode ser:",
+    options: [
+      "Equilátero",
+      "Isósceles ou escaleno",
+      "Apenas escaleno",
+      "Apenas isósceles"
+    ],
+    correct: 1
+  },
+  {
+    question: "Se a base e a altura de um paralelogramo são iguais, a figura pode ser um:",
+    options: [
+      "Quadrado ou losango",
+      "Apenas quadrado",
+      "Apenas retângulo",
+      "Apenas losango"
+    ],
+    correct: 0
+  },
+  {
+    question: "A relação entre as áreas de um paralelogramo e um triângulo com mesma base e altura é:",
+    options: [
+      "São iguais",
+      "O paralelogramo tem o dobro da área",
+      "O triângulo tem o dobro da área",
+      "Não há relação"
+    ],
+    correct: 1
   }
 ];
 
@@ -519,7 +506,7 @@ function showQuizResults(score, total) {
 
   if (percentage >= 90) {
     performanceMessage.textContent =
-      "🎉 Excelente! Você domina completamente o conteúdo sobre áreas!";
+      "🎉 Excelente! Você domina completamente o conteúdo sobre triângulos retângulos e paralelogramos!";
     performanceMessage.style.color = "#00d4aa";
   } else if (percentage >= 70) {
     performanceMessage.textContent =
@@ -531,7 +518,7 @@ function showQuizResults(score, total) {
     performanceMessage.style.color = "#ffb74d";
   } else {
     performanceMessage.textContent =
-      "📚 Estude um pouco mais os conceitos de área e tente novamente!";
+      "📚 Estude um pouco mais os conceitos de área do triângulo retângulo e paralelogramo!";
     performanceMessage.style.color = "#ff6b6b";
   }
 
